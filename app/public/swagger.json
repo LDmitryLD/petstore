@@ -1,0 +1,585 @@
+{
+  "consumes": [
+    "application/json",
+    "multipart/form-data"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentation of PetStore API.",
+    "title": "PetStore.",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "paths": {
+    "/pet": {
+      "put": {
+        "tags": [
+          "pet"
+        ],
+        "summary": "Обновление существующего питомца.",
+        "operationId": "PetUpdateRequest",
+        "parameters": [
+          {
+            "x-go-name": "Body",
+            "description": "Питомец которого надо обновить",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/PetUpdateResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "pet"
+        ],
+        "summary": "Добавление нового питомца в магазин.",
+        "operationId": "PetAddRequest",
+        "parameters": [
+          {
+            "x-go-name": "Body",
+            "description": "Питомец которого надо добавить в магазин",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/PetAddResponse"
+          }
+        }
+      }
+    },
+    "/pet/findByStatus": {
+      "get": {
+        "description": "Несколько значений статуса могут быть представлены строками, разделенными запятыми",
+        "tags": [
+          "pet"
+        ],
+        "summary": "Найти питомца по статусу.",
+        "operationId": "GetByStatusRequest",
+        "parameters": [
+          {
+            "type": "array",
+            "items": {
+              "enum": [
+                "available",
+                " pending",
+                " sold"
+              ],
+              "type": "string"
+            },
+            "x-go-name": "Status",
+            "description": "Значения статуса, которые необходимо учитывать при фильтрации\nДоступные значения : available, pending, sold",
+            "name": "status",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetByStatusResponse"
+          }
+        }
+      }
+    },
+    "/pet/{petId}": {
+      "get": {
+        "description": "Возвращает одного питомца",
+        "tags": [
+          "pet"
+        ],
+        "summary": "Найти питомца по ID.",
+        "operationId": "GetByIDRequest",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "PetID",
+            "description": "ID питомца",
+            "name": "petId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetByIDResponse"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "pet"
+        ],
+        "summary": "Обновить питомца в магазине по ID.",
+        "operationId": "UpdateByIDRequest",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "PetID",
+            "description": "ID питомца которого нужно обновить",
+            "name": "petId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "Name",
+            "description": "Новое имя питомца",
+            "name": "name",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "x-go-name": "Status",
+            "description": "Новый статус питомца",
+            "name": "status",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/UpdateByIDResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "pet"
+        ],
+        "summary": "Удалить питомца.",
+        "operationId": "DeletePetRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "APIKey",
+            "name": "api_key",
+            "in": "header"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "PetID",
+            "description": "ID питомца",
+            "name": "petId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": " Pet not found."
+          }
+        }
+      }
+    },
+    "/pet/{petId}/uploadImage": {
+      "post": {
+        "tags": [
+          "pet"
+        ],
+        "summary": "загрузка изображения.",
+        "operationId": "UploadImageParametes",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "PetID",
+            "description": "ID питомца",
+            "name": "petId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "AdditionalMetadata",
+            "description": "Дополнительная информация для передачи на сервер",
+            "name": "additional_metadata",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "x-go-name": "File",
+            "description": "файл для загрузки",
+            "name": "file",
+            "in": "formData",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/ApiResponse"
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Создание пользователя.",
+        "operationId": "CreateUserRequest",
+        "parameters": [
+          {
+            "x-go-name": "Body",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/CreateUserResponse"
+          }
+        }
+      }
+    },
+    "/user/createWithArray": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Создаёт список пользователей по полученному массиву.",
+        "operationId": "CreateArrayRequest",
+        "parameters": [
+          {
+            "x-go-name": "Body",
+            "description": "Список объектов user",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/CreateArrayResponse"
+          }
+        }
+      }
+    },
+    "/user/createWithList": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Создаёт список пользователей по полученному массиву.",
+        "operationId": "CreateListRequest",
+        "parameters": [
+          {
+            "x-go-name": "Body",
+            "description": "Список объектов user",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/User"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/CreateListResponse"
+          }
+        }
+      }
+    },
+    "/user/{username}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Получения пользователя по никнейму.",
+        "operationId": "GetUserRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Username",
+            "description": "Никнейм пользователя",
+            "name": "username",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetUserResponse"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Обновляет пользователя.",
+        "operationId": "UpdateUserRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Username",
+            "description": "Никнейм пользователя которого надо обновить",
+            "name": "username",
+            "in": "path",
+            "required": true
+          },
+          {
+            "x-go-name": "Body",
+            "description": "Новый объект user",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/UpdateUserResponse"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Удаление пользователя.",
+        "operationId": "DeleteUserRequest",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Username",
+            "description": "Никнейм пользователя",
+            "name": "username",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/DeleteUserResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
+    },
+    "Category": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
+    },
+    "Pet": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/definitions/Category"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "photoUrls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "PhotoUrls"
+        },
+        "status": {
+          "type": "string",
+          "x-go-name": "Status"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Category"
+          },
+          "x-go-name": "Tags"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
+    },
+    "User": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "x-go-name": "Email"
+        },
+        "firstName": {
+          "type": "string",
+          "x-go-name": "FirstName"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "lastName": {
+          "type": "string",
+          "x-go-name": "LastName"
+        },
+        "password": {
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "phone": {
+          "type": "string",
+          "x-go-name": "Phone"
+        },
+        "userStatus": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "UserStatus"
+        },
+        "username": {
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
+    }
+  },
+  "responses": {
+    "ApiResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "CreateArrayResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "CreateListResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "CreateUserResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "DeleteUserResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "GetByIDResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Pet"
+      }
+    },
+    "GetByStatusResponse": {
+      "description": "",
+      "schema": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/Pet"
+        }
+      }
+    },
+    "GetUserResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/User"
+      }
+    },
+    "PetAddResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Pet"
+      }
+    },
+    "PetUpdateResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Pet"
+      }
+    },
+    "UpdateByIDResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "UpdateUserResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "basic"
+    }
+  }
+}
