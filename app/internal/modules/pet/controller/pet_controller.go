@@ -57,7 +57,8 @@ func (p *PetController) UploadImage(w http.ResponseWriter, r *http.Request) {
 
 	file, handler, err := r.FormFile("file")
 	if err != nil {
-		p.ErrorBadRequest(w, err)
+		http.Error(w, err.Error(), http.StatusAccepted)
+		//p.ErrorBadRequest(w, err)
 		return
 	}
 	defer file.Close()

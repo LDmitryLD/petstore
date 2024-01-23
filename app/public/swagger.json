@@ -16,6 +16,13 @@
   "paths": {
     "/pet": {
       "put": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "tags": [
           "pet"
         ],
@@ -39,6 +46,13 @@
         }
       },
       "post": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "tags": [
           "pet"
         ],
@@ -64,6 +78,13 @@
     },
     "/pet/findByStatus": {
       "get": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "description": "Несколько значений статуса могут быть представлены строками, разделенными запятыми",
         "tags": [
           "pet"
@@ -95,8 +116,61 @@
         }
       }
     },
+    "/pet/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Авторизация пользователя для работы с питомцами.",
+        "operationId": "LoginRequest",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/LoginRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/LoginResponse"
+          }
+        }
+      }
+    },
+    "/pet/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Регистрация пользователя для работы с питомцами.",
+        "operationId": "RegisterRequest",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/RegisterRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/RegisterReponse"
+          }
+        }
+      }
+    },
     "/pet/{petId}": {
       "get": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "description": "Возвращает одного питомца",
         "tags": [
           "pet"
@@ -121,6 +195,13 @@
         }
       },
       "post": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "tags": [
           "pet"
         ],
@@ -158,6 +239,13 @@
         }
       },
       "delete": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "tags": [
           "pet"
         ],
@@ -189,6 +277,13 @@
     },
     "/pet/{petId}/uploadImage": {
       "post": {
+        "security": [
+          {
+            "Bearer": [
+              "[]"
+            ]
+          }
+        ],
         "tags": [
           "pet"
         ],
@@ -223,6 +318,111 @@
         "responses": {
           "200": {
             "$ref": "#/responses/ApiResponse"
+          }
+        }
+      }
+    },
+    "/store/inventory": {
+      "get": {
+        "description": "Возвращает сопоставление статусов с их колличеством",
+        "tags": [
+          "store"
+        ],
+        "summary": "Получить список заказов по статусу.",
+        "operationId": "GetInventoryRequest",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetInventoryResponse"
+          }
+        }
+      }
+    },
+    "/store/order": {
+      "post": {
+        "tags": [
+          "store"
+        ],
+        "summary": "Разместить заказ питомца.",
+        "operationId": "CreateOrderRequest",
+        "parameters": [
+          {
+            "x-go-name": "Body",
+            "description": "Разместить заказ на покупку питомца",
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Order"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/CreateOrderResponse"
+          },
+          "400": {
+            "description": " Invalid Order."
+          }
+        }
+      }
+    },
+    "/store/order/{orderId}": {
+      "get": {
+        "tags": [
+          "store"
+        ],
+        "summary": "Найти заказ на покупку питомца по ID.",
+        "operationId": "GetOrderByIDRequest",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "OrderID",
+            "description": "ID заказа",
+            "name": "orderId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/GetOrderByIDResponse"
+          },
+          "400": {
+            "description": " Invalid ID supplied."
+          },
+          "404": {
+            "description": " Order not found."
+          }
+        }
+      },
+      "delete": {
+        "description": "Используйте только положительные целые числа",
+        "tags": [
+          "store"
+        ],
+        "summary": "Удаление заказа по ID.",
+        "operationId": "DeleteOrderRequest",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "OrderID",
+            "description": "ID заказа который нужно удалить",
+            "name": "orderId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/DeleteOrderResponse"
+          },
+          "400": {
+            "description": " Invalid ID supplied."
+          },
+          "404": {
+            "description": " Order not found."
           }
         }
       }
@@ -423,6 +623,67 @@
       },
       "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
     },
+    "LoginRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "username": {
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/modules/auth/controller"
+    },
+    "LoginResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "success": {
+          "type": "boolean",
+          "x-go-name": "Success"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/modules/auth/controller"
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "complete": {
+          "type": "boolean",
+          "x-go-name": "Complete"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "petId": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "PetID"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Quantity"
+        },
+        "shipDate": {
+          "type": "string",
+          "x-go-name": "ShipDate"
+        },
+        "status": {
+          "type": "string",
+          "x-go-name": "Status"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
+    },
     "Pet": {
       "type": "object",
       "properties": {
@@ -458,6 +719,34 @@
         }
       },
       "x-go-package": "projects/LDmitryLD/petstore/app/internal/models"
+    },
+    "RegisterReponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        },
+        "success": {
+          "type": "boolean",
+          "x-go-name": "Success"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/modules/auth/controller"
+    },
+    "RegisterRequest": {
+      "type": "object",
+      "properties": {
+        "password": {
+          "type": "string",
+          "x-go-name": "Password"
+        },
+        "username": {
+          "type": "string",
+          "x-go-name": "Username"
+        }
+      },
+      "x-go-package": "projects/LDmitryLD/petstore/app/internal/modules/auth/controller"
     },
     "User": {
       "type": "object",
@@ -519,7 +808,19 @@
         "$ref": "#/definitions/ApiResponse"
       }
     },
+    "CreateOrderResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Order"
+      }
+    },
     "CreateUserResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/ApiResponse"
+      }
+    },
+    "DeleteOrderResponse": {
       "description": "",
       "schema": {
         "$ref": "#/definitions/ApiResponse"
@@ -546,10 +847,29 @@
         }
       }
     },
+    "GetInventoryResponse": {
+      "description": "",
+      "schema": {
+        "type": "object",
+        "additionalProperties": {}
+      }
+    },
+    "GetOrderByIDResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/Order"
+      }
+    },
     "GetUserResponse": {
       "description": "",
       "schema": {
         "$ref": "#/definitions/User"
+      }
+    },
+    "LoginResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/LoginResponse"
       }
     },
     "PetAddResponse": {
@@ -562,6 +882,12 @@
       "description": "",
       "schema": {
         "$ref": "#/definitions/Pet"
+      }
+    },
+    "RegisterReponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/RegisterReponse"
       }
     },
     "UpdateByIDResponse": {
@@ -579,7 +905,9 @@
   },
   "securityDefinitions": {
     "Bearer": {
-      "type": "basic"
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }

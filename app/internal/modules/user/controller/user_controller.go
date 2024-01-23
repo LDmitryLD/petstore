@@ -76,11 +76,11 @@ func (u *UserController) CreateWithArray(w http.ResponseWriter, r *http.Request)
 
 func (u *UserController) GetByUsername(w http.ResponseWriter, r *http.Request) {
 	userName := chi.URLParam(r, "username")
-	if userName == "" {
-		u.ErrorBadRequest(
-			w, fmt.Errorf(ErrInvalidUsername))
-		return
-	}
+	// if userName == "" {
+	// 	u.ErrorBadRequest(
+	// 		w, fmt.Errorf(ErrInvalidUsername))
+	// 	return
+	// }
 
 	user, err := u.service.GetByUsername(userName)
 	if err != nil {
@@ -94,10 +94,10 @@ func (u *UserController) GetByUsername(w http.ResponseWriter, r *http.Request) {
 
 func (u *UserController) Update(w http.ResponseWriter, r *http.Request) {
 	username := chi.URLParam(r, "username")
-	if username == "" {
-		u.ErrorBadRequest(w, fmt.Errorf(ErrInvalidUsername))
-		return
-	}
+	// if username == "" {
+	// 	u.ErrorBadRequest(w, fmt.Errorf(ErrInvalidUsername))
+	// 	return
+	// }
 
 	var user models.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
@@ -111,15 +111,15 @@ func (u *UserController) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.OutputJSON(w, models.ApiResponse{Code: 200, Type: "unknown", Message: ""}) // что передавать в message надо подумать
+	u.OutputJSON(w, models.ApiResponse{Code: 200, Type: "unknown", Message: "ok"})
 }
 
 func (u *UserController) Delete(w http.ResponseWriter, r *http.Request) {
 	username := chi.URLParam(r, "username")
-	if username == "" {
-		u.ErrorBadRequest(w, fmt.Errorf(ErrInvalidUsername))
-		return
-	}
+	// if username == "" {
+	// 	u.ErrorBadRequest(w, fmt.Errorf(ErrInvalidUsername))
+	// 	return
+	// }
 
 	if err := u.service.Delete(username); err != nil {
 		msg, _ := json.Marshal(models.ApiResponse{Code: http.StatusNotFound, Type: "error", Message: err.Error()})

@@ -27,6 +27,7 @@ func UpdatePetByID(pets *[]*models.Pet, id int, name string, status string) {
 			switch {
 			case name != "":
 				(*pets)[i].Name = name
+				fallthrough
 			case status != "":
 				(*pets)[i].Status = status
 			}

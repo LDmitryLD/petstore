@@ -52,7 +52,7 @@ func (p *PetService) GetList() GetListOut {
 func (p *PetService) UploadImage(in UploadIn) UploadOut {
 	fileName := in.Handler.Filename
 
-	err := p.storage.UploadImage(fileName, in.PetID)
+	err := p.storage.UploadImage(in.File, fileName, in.PetID)
 
 	out := UploadOut{
 		FileName: fileName,

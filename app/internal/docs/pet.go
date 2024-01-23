@@ -7,6 +7,8 @@ import (
 
 // swagger:route POST /pet/{petId}/uploadImage pet UploadImageParametes
 // загрузка изображения.
+// security:
+//   - Bearer: []
 // responses:
 // 	200: ApiResponse
 
@@ -39,6 +41,8 @@ type ApiResponse struct {
 
 // swagger:route POST /pet pet PetAddRequest
 // Добавление нового питомца в магазин.
+// security:
+//   - Bearer: []
 // responses:
 // 	200: PetAddResponse
 
@@ -58,6 +62,8 @@ type PetAddResponse struct {
 
 // swagger:route PUT /pet pet PetUpdateRequest
 // Обновление существующего питомца.
+// security:
+//   - Bearer: []
 // responses:
 // 	200: PetUpdateResponse
 
@@ -78,6 +84,8 @@ type PetUpdateResponse struct {
 // swagger:route GET /pet/findByStatus pet GetByStatusRequest
 // Найти питомца по статусу.
 // Несколько значений статуса могут быть представлены строками, разделенными запятыми
+// security:
+//   - Bearer: []
 // responses:
 // 	200: GetByStatusResponse
 
@@ -101,6 +109,8 @@ type GetByStatusResponse struct {
 // swagger:route GET /pet/{petId} pet GetByIDRequest
 // Найти питомца по ID.
 // Возвращает одного питомца
+// security:
+//   - Bearer: []
 // responses:
 // 	200: GetByIDResponse
 
@@ -121,6 +131,8 @@ type GetByIDResponse struct {
 
 // swagger:route POST /pet/{petId} pet UpdateByIDRequest
 // Обновить питомца в магазине по ID.
+// security:
+//   - Bearer: []
 // responses:
 // 	200: UpdateByIDResponse
 
@@ -149,6 +161,8 @@ type UpdateByIDResponse struct {
 
 // swagger:route DELETE /pet/{petId} pet DeletePetRequest
 // Удалить питомца.
+// security:
+//   - Bearer: []
 // responses:
 // 	404: description: Pet not found.
 

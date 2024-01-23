@@ -2,6 +2,9 @@ package storage
 
 import (
 	"fmt"
+	"io"
+	"mime/multipart"
+	"os"
 	"projects/LDmitryLD/petstore/app/helpers"
 	"projects/LDmitryLD/petstore/app/internal/models"
 	"sync"
@@ -91,7 +94,7 @@ func (p *PetStorage) GetList() []models.Pet {
 	return list
 }
 
-func (p *PetStorage) UploadImage(fileName string, id int) error {
+func (p *PetStorage) UploadImage(file multipart.File, fileName string, id int) error {
 	p.Lock()
 	defer p.Unlock()
 
@@ -103,6 +106,21 @@ func (p *PetStorage) UploadImage(fileName string, id int) error {
 		}
 	}
 
+	err := os.MkdirAll("../uploads", os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	out, err := os.Create("../uploads/" + fileName)
+	if err != nil {
+		return fmt.Errorf("ошибка при создании файла %s", err.Error())
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, file)
+	if err != nil {
+		return fmt.Errorf("ошибка при копировании файла: %s", err.Error())
+	}
 	return nil
 }
 
